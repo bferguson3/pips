@@ -9,7 +9,7 @@
 import os,sys
 
 if(len(sys.argv) < 3):
-    print("Usage:\n $ python3 makeips.py <base-file> <file-to-become>")
+    print("Usage:\n $ python3 makeips.py <base-file> <compared-file>")
     sys.exit()
 
 f = open(sys.argv[1], "rb")

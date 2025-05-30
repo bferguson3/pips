@@ -20,7 +20,7 @@ typedef struct _patch {
 
 int main(int argc, char *argv[]) {
     if (argc < 3) {
-        printf("Usage:\n makeips <base-file> <file-to-become>\n");
+        printf("Usage:\n makeips <base-file> <compared-file>\n");
         return 1; // Not enough arguments
     }
 

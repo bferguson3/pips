@@ -1,6 +1,8 @@
-# PIPS v0.1
+# pIPS v0.1
 
-## patch.c / patch.py
+I got tired of not having an open source, multi-platform IPS tool, so I made one. Enjoy.
+
+## patcher.c / patcher.py
 
 Utilize an IPS patch file (RLE supported) to patch a file.<br>
 Produces "out.bin"
