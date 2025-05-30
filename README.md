@@ -14,8 +14,7 @@ Produces "out.ips"
 
 ## chksum.c 
 
-Calculates 16-bit checksum by adding every byte (8 bits) in a file. (Does not accomodate for header yet)
-
+Calculates 16-bit checksum by adding every byte (8 bits) in a file. 
 ## fixrom.py 
 
 Searches for a valid ROM header, calculates valid SNES/SFC checksum and patches it.
