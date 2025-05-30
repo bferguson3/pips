@@ -24,7 +24,7 @@ void not_ips(){
 
 int main(int argc, char *argv[]) {
     if (argc < 3) {
-        printf("Usage:\n patch <base-file> <patch-file>.ips");
+        printf("Usage:\n patch <base-file> <patch-file>.ips\n");
         return 1; // Not enough arguments
     }
 

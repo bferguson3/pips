@@ -12,3 +12,6 @@ Produces "out.bin"
 Create an IPS file from two input files. (Currently does not RLE compress)<br>
 Produces "out.ips"
 
+## checksum.c / checksum.py
+
+Calculates 16-bit checksum by adding every byte (8 bits) in a file. (Super NES/Super Famicom checksum)
