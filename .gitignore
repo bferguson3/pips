@@ -1,3 +1,5 @@
 makeips
 patch
 chksum
+*.sfc
+
