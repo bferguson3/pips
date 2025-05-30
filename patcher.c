@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
             for(int v = 0; v < rle_len; v++){
                 changes[changes_size].bytes[v] = ips[i + 2];
             }
-            i += 3 + 1; // i-- below
+            i += 3; // i-- below
         }
         else{
             changes[changes_size].bytes = (u8*)malloc(sizeof(u8) * changes[changes_size].size);
