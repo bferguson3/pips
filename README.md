@@ -12,6 +12,10 @@ Produces "out.bin"
 Create an IPS file from two input files. (Currently does not RLE compress)<br>
 Produces "out.ips"
 
-## checksum.c / checksum.py
+## chksum.c 
 
-Calculates 16-bit checksum by adding every byte (8 bits) in a file. (Super NES/Super Famicom checksum)
+Calculates 16-bit checksum by adding every byte (8 bits) in a file. (Does not accomodate for header yet)
+
+## fixrom.py 
+
+Searches for a valid ROM header, calculates valid SNES/SFC checksum and patches it.
