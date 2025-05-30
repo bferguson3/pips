@@ -87,7 +87,6 @@ int main(int argc, char *argv[]) {
             }
         }
         i--; // balance bytes.size iterator
-        printf("%lu %d\n", changes[changes_size].offset, changes[changes_size].size);
         changes_size++;
         if(changes_size >= changes_capacity){
             changes_capacity += 100;
@@ -95,9 +94,9 @@ int main(int argc, char *argv[]) {
         }
         
     }
+    printf("Applying %d patches...\n", changes_size);
     // now adjust input bytes 
     for(i = 0; i < changes_size; i++){
-        printf("a");
         int p = 0;
         for(int j = changes[i].offset; j < changes[i].offset + changes[i].size; j++){
             base[j] = changes[i].bytes[p++];
@@ -107,7 +106,7 @@ int main(int argc, char *argv[]) {
     f = fopen("out.bin", "wb");
     fwrite(base, 1, base_size, f);
     fclose(f);
-    printf("out.bin file written.\n");
+    printf("out.bin file written OK.\n");
 
     free(base);
     free(ips);

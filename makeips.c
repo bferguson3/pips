@@ -120,6 +120,8 @@ int main(int argc, char *argv[]) {
     unsigned char * ips = (u8*)malloc(sizeof(u8)*tot);
     int ips_size = 0;
 
+    printf("Creating %d patches...\n", changes_size);
+
     ips[ips_size++] = 'P';
     ips[ips_size++] = 'A';
     ips[ips_size++] = 'T';
@@ -146,7 +148,7 @@ int main(int argc, char *argv[]) {
     f = fopen("out.ips", "wb");
     fwrite(ips, 1, ips_size, f);
     fclose(f);
-    printf("out.ips IPS file written.\n");
+    printf("out.ips IPS file written OK.\n");
 
     free(base);
     free(cmp);
