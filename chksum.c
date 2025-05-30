@@ -4,6 +4,7 @@
 *  (c)2025 bferguson3
 *     @retrodevdiscord
 *
+*  THIS DOES NOT IGNORE THE ROM HEADER YET
 */
 
 #include <stdio.h>
