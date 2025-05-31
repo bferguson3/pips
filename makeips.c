@@ -135,9 +135,17 @@ int main(int argc, char *argv[]) {
         int len = (changes[i].size[0] << 8) | (changes[i].size[1]);
         ips[ips_size++] = (u8)(changes[i].size[0]);
         ips[ips_size++] = (u8)(changes[i].size[1]);
-        //ips[ips_size++] = (unsigned char)(changes[i][2]);
-        for(int j = 0; j < len; j++) {
-            ips[ips_size++] = (u8)changes[i].bytes[j];
+        if(len == 0) {
+            // RLE 
+            ips[ips_size++] = (u8)(changes[i].bytes[0]);
+            ips[ips_size++] = (u8)(changes[i].bytes[1]);
+            int rle_len = (changes[i].bytes[0] << 8) | (changes[i].bytes[1]);
+            for(int j = 0; j < rle_len; j++) ips[ips_size++] = (u8)(changes[i].bytes[2]);
+        }
+        else {
+            for(int j = 0; j < len; j++) {
+                ips[ips_size++] = (u8)changes[i].bytes[j];
+            }
         }
     }
 

@@ -22,7 +22,7 @@ f.close()
 
 changes=[]
 i = 0
-if(len(base) < len(cmp)): # file 1 is bigger 
+if(len(base) <= len(cmp)): # file 1 is bigger 
     while i < len(base):
         if(base[i] != cmp[i]):
             ofs = i
@@ -32,26 +32,16 @@ if(len(base) < len(cmp)): # file 1 is bigger
                 i += 1
             changes.append((ofs, len(o), o))
         i += 1
-    add=[]
-    while i < len(cmp):
-        add.append(cmp[i])
-        i += 1
-    changes.append((ofs, len(add), add))
-else: # file 2 is bigger 
-    while i < len(cmp):
-        if(base[i] != cmp[i]):
-            ofs = i
-            o = []
-            while(base[i] != cmp[i]):
-                o.append(base[i])
-                i += 1
-            changes.append((ofs, len(o), o))
-        i += 1
-    add=[]
-    while i < len(base):
-        add.append(base[i])
-        i += 1
-    changes.append((ofs, len(add), add))
+    if(len(cmp) > len(base)):
+        add=[]
+        while i < len(cmp):
+            add.append(cmp[i])
+            i += 1
+        changes.append((ofs, len(add), add))
+else: # file 2 is smaller
+    print("Ensure file 2 is larger!")
+    sys.exit()
+
 
 i = 0
 tot = 0

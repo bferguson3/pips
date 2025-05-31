@@ -42,17 +42,8 @@ while ips[bc:bc+3] != b'EOF':
     bc += 3
     p.length = (ips[bc] << 8)|ips[bc+1]
     bc += 2
-    if(p.length == 0):
-        # this is RLE 
-        rlesz = (ips[bc]<<8)|(ips[bc+1])
-        n = 0
-        while n < rlesz:
-            p.bytes.append(ips[bc+2])
-            n += 1
-        bc += 3
-    else:
-        p.bytes = ips[bc:bc+p.length]
-        bc += p.length 
+    p.bytes = ips[bc:bc+p.length]
+    bc += p.length 
     patches.append(p)
 
 for p in patches:
