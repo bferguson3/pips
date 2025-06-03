@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
             if (base[i] != cmp[i]) {
                 int ofs = i;
                 int o_size = 0;
-                while ((base[i] != cmp[i]) && (i < cmp_size)) {
+                while ((base[i] != cmp[i]) && (i < cmp_size) && (o_size < 0xffff)) {
                     o_size++;
                     i++;
                 }

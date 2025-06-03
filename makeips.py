@@ -29,6 +29,8 @@ if(len(base) <= len(cmp)): # file 1 is bigger
             o = []
             while(base[i] != cmp[i]):
                 o.append(cmp[i])
+                if(len(o)) == 0xffff:
+                    break
                 i += 1
             changes.append((ofs, len(o), o))
         i += 1
