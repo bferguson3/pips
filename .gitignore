@@ -4,3 +4,5 @@ patcher
 chksum
 *.sfc
 *.ips
+*.bips
+makebips

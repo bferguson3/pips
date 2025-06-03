@@ -1,9 +1,12 @@
 /*
-*  makeips.c
+*  makeBips.c
 *
 *  (c)2025 bferguson3
 *     @retrodevdiscord
 *
+* IPS file with support for up to 4GB files.
+*  Format is identical to IPS, but offset is 4b instead of 3b
+*  and size is 4b instead of 2b. 
 */
 
 #include <stdio.h>
@@ -13,14 +16,14 @@
 #define u8 unsigned char
 
 typedef struct _patch { 
-    u8 offset[3];
-    u8 size[2];
+    u8 offset[4];
+    u8 size[4];
     u8* bytes;
 } patch;
 
 int main(int argc, char *argv[]) {
     if (argc < 3) {
-        printf("Usage:\n makeips <base-file> <compared-file>\n");
+        printf("Usage:\n makebips <base-file> <compared-file>\n");
         return 1; // Not enough arguments
     }
 
@@ -46,17 +49,17 @@ int main(int argc, char *argv[]) {
     fread(cmp, 1, cmp_size, f);
     fclose(f);
 
-    int changes_capacity = 100;
-    int changes_size = 0;
+    long changes_capacity = 100;
+    long changes_size = 0;
     patch* changes = (patch *)malloc(changes_capacity * sizeof(patch));
 
     int i = 0;
     if (base_size <= cmp_size) { // file 2 is bigger
         while (i < base_size) {
             if (base[i] != cmp[i]) {
-                int ofs = i;
-                int o_size = 0;
-                while ((base[i] != cmp[i]) && (i < cmp_size) && (o_size < 0xffff)) {
+                long ofs = i;
+                long o_size = 0;
+                while ((base[i] != cmp[i]) && (i < cmp_size) && (o_size < 0xffffffff)) {
                     o_size++;
                     i++;
                 }
@@ -64,13 +67,16 @@ int main(int argc, char *argv[]) {
                     changes_capacity += 100;
                     changes = (patch*)realloc(changes, changes_capacity * sizeof(patch));
                 }
-                changes[changes_size].offset[0] = (ofs & 0xff0000) >> 16;
-                changes[changes_size].offset[1] = (ofs & 0xff00) >> 8;
-                changes[changes_size].offset[2] = (ofs & 0xff);
-                changes[changes_size].size[0] = (o_size & 0xff00) >> 8;
-                changes[changes_size].size[1] = (o_size & 0xff);
+                changes[changes_size].offset[0] = (ofs & 0xff000000) >> 24;
+                changes[changes_size].offset[1] = (ofs & 0xff0000) >> 16;
+                changes[changes_size].offset[2] = (ofs & 0xff00) >> 8;
+                changes[changes_size].offset[3] = (ofs & 0xff);
+                changes[changes_size].size[0] = (o_size & 0xff000000) >> 24;
+                changes[changes_size].size[1] = (o_size & 0xff0000) >> 16;
+                changes[changes_size].size[2] = (o_size & 0xff00) >> 8;
+                changes[changes_size].size[3] = (o_size & 0xff);
                 changes[changes_size].bytes = (u8*)malloc(o_size * sizeof(u8));
-                for(int b = 0; b < o_size; b++){
+                for(long b = 0; b < o_size; b++){
                     changes[changes_size].bytes[b] = cmp[i - o_size + b]; // hmm
                 }
                 changes_size++;
@@ -89,11 +95,14 @@ int main(int argc, char *argv[]) {
                 changes_capacity *= 2;
                 changes = (patch*)realloc(changes, changes_capacity * sizeof(patch));
             }
-            changes[changes_size].offset[0] = (ro & 0xff0000) >> 16; // Offset
-            changes[changes_size].offset[1] = (ro & 0xff00) >> 8;
-            changes[changes_size].offset[2] = (ro & 0xff);
-            changes[changes_size].size[0] = (add_size & 0xff00) >> 8; // Length
-            changes[changes_size].size[1] = (add_size & 0xff);
+            changes[changes_size].offset[0] = (ro & 0xff000000) >> 24;
+            changes[changes_size].offset[1] = (ro & 0xff0000) >> 16;
+            changes[changes_size].offset[2] = (ro & 0xff00) >> 8;
+            changes[changes_size].offset[3] = (ro & 0xff);
+            changes[changes_size].size[0] = (add_size & 0xff000000) >> 24;
+            changes[changes_size].size[1] = (add_size & 0xff0000) >> 16;
+            changes[changes_size].size[2] = (add_size & 0xff00) >> 8;
+            changes[changes_size].size[3] = (add_size & 0xff);
             changes[changes_size].bytes = (u8*)malloc(add_size * sizeof(u8));
             for(int b = 0; b < add_size; b++){
                 changes[changes_size].bytes[b] = cmp[i - add_size + b]; // hmm
@@ -109,18 +118,18 @@ int main(int argc, char *argv[]) {
     
     // length will be 5 + (len of changes * 5) + len of each byte arr 
     changes = (patch *)realloc(changes, changes_size * sizeof(patch));
-    int tot = 5 + (5 * changes_size);
+    long tot = 5 + (5 * changes_size);
     
     //printf("%d, %d\n", changes_size, tot);
-    for(int p = 0; p < changes_size; p++) {
-        int len = (changes[p].size[0] << 8) | (changes[p].size[1]);
+    for(long p = 0; p < changes_size; p++) {
+        long len = (changes[p].size[0] << 24) |(changes[p].size[1] << 16) |(changes[p].size[2] << 8) | (changes[p].size[3]);
         tot += len;
     }
     
     unsigned char * ips = (u8*)malloc(sizeof(u8)*tot);
-    int ips_size = 0;
+    long ips_size = 0;
 
-    printf("Creating %d patches...\n", changes_size);
+    printf("Creating %lu patches...\n", changes_size);
 
     ips[ips_size++] = 'P';
     ips[ips_size++] = 'A';
@@ -132,34 +141,30 @@ int main(int argc, char *argv[]) {
         ips[ips_size++] = (u8)(changes[i].offset[0]);
         ips[ips_size++] = (u8)(changes[i].offset[1]);
         ips[ips_size++] = (u8)(changes[i].offset[2]);
-        int len = (changes[i].size[0] << 8) | (changes[i].size[1]);
+        ips[ips_size++] = (u8)(changes[i].offset[3]);
+        long len = (changes[i].size[0] << 24) |(changes[i].size[1] << 16) |(changes[i].size[2] << 8) | (changes[i].size[3]);
         ips[ips_size++] = (u8)(changes[i].size[0]);
         ips[ips_size++] = (u8)(changes[i].size[1]);
-        if(len == 0) {
-            // RLE 
-            ips[ips_size++] = (u8)(changes[i].bytes[0]);
-            ips[ips_size++] = (u8)(changes[i].bytes[1]);
-            int rle_len = (changes[i].bytes[0] << 8) | (changes[i].bytes[1]);
-            for(int j = 0; j < rle_len; j++) ips[ips_size++] = (u8)(changes[i].bytes[2]);
+        ips[ips_size++] = (u8)(changes[i].size[2]);
+        ips[ips_size++] = (u8)(changes[i].size[3]);
+        for(int j = 0; j < len; j++) {
+            ips[ips_size++] = (u8)changes[i].bytes[j];
         }
-        else {
-            for(int j = 0; j < len; j++) {
-                ips[ips_size++] = (u8)changes[i].bytes[j];
-            }
-        }
+    
     }
 
     ips[ips_size++] = 'E';
     ips[ips_size++] = 'O';
     ips[ips_size++] = 'F';
 
-    f = fopen("out.ips", "wb");
+    f = fopen("out.bips", "wb");
     if(fwrite(ips, 1, ips_size, f) < ips_size){
-        printf("out.ips writing failed!\nMust be a bug!!\n");
+        printf("out.bips writing failed!\nMust be a bug!!\n");
     }
     else
-        printf("out.ips IPS file written OK.\n");
-
+        printf("out.bips BIPS file written OK.\n");
+    fclose(f);
+    
     free(base);
     free(cmp);
     for(int i = 0; i < changes_size; i++){
