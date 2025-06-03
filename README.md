@@ -12,8 +12,7 @@ Produces "out.bin"
 Create an IPS file from two input files. (Currently does not RLE compress)<br>
 Produces "out.ips"
 
-## makebips.c
-### New to v0.2
+## makebips.c (new to v0.2)
 
 Makes a BIPS file from two input files.<br>
 Format is identical to IPS, but offset and length for each patch is 4 bytes long to support up to 4GB files.<br>
