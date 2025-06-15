@@ -12,11 +12,8 @@ Produces "out.bin"
 Create an IPS file from two input files. (Currently does not RLE compress)<br>
 Produces "out.ips"
 
-## makebips.c (new to v0.2)
-
-Makes a BIPS file from two input files.<br>
-Format is identical to IPS, but offset and length for each patch is 4 bytes long to support up to 4GB files.<br>
-Warning: Loads entire file into memory!
+<hr>
+Other tools:<br>
 
 ## chksum.c 
 
@@ -25,3 +22,10 @@ Calculates 16-bit checksum by adding every byte (8 bits) in a file.
 ## fixrom.py 
 
 Searches for a valid ROM header, calculates valid SNES/SFC checksum and patches it.
+
+## makebips.c (new to v0.2)
+
+Makes a BIPS file ("Big IPS", IPS with support for up to 4GB files) from two input files.<br>
+BIPS file format is identical to IPS, but offset and length for each patch is 4 bytes long to support up to 4GB.<br>
+Warning: Loads entire file into memory!
+
