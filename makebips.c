@@ -116,9 +116,9 @@ int main(int argc, char *argv[]) {
         return 2;
     }
     
-    // length will be 5 + (len of changes * 5) + len of each byte arr 
+    // length will be 8 + (len of changes * 5) + len of each byte arr 
     changes = (patch *)realloc(changes, changes_size * sizeof(patch));
-    long tot = 5 + (5 * changes_size);
+    long tot = 8 + (5 * changes_size);
     
     //printf("%d, %d\n", changes_size, tot);
     for(long p = 0; p < changes_size; p++) {
